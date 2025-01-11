@@ -34,6 +34,43 @@ body {
     border: none;
 }
 
+.search-input{
+    background-color: aliceblue;
+    height:  30px;
+    width: 300px;
+    border-radius: 20px;
+    padding: 10px;
+}
+.search-icon {
+    background-color: aliceblue;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .search-icon .icon {
+    width: 40px;
+    height: 40px;
+    stroke: #000000; /* Default color for the icon */
+    transition: stroke 0.2s ease; /* Smooth color change */
+  }
+  
+  .search-icon:hover .icon {
+    stroke: #809fff; /* Icon color on hover */
+  }
+  
+.search{
+    display: flex;
+    gap: 20px;
+justify-content: center;
+align-items: center;
+
+}
 /* .weather-info {
     background-color: #133A75;
     border-radius: 15px;
