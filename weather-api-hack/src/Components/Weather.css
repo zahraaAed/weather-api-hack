@@ -159,11 +159,24 @@ align-items: center;
     text-align: center;
 }
 /* Media Query for screens less than 560px */
-@media (max-width: 560px) {
+@media (max-width: 600px) {
     .header {
       flex-direction: column; 
       text-align: center; 
     }
+    .stats{
+      flex-wrap: wrap;
+    }
+}
+@media (max-width: 1100px) {
+  
+    .big-stats {
+        padding: 20px; 
+        width: 80%; 
+        margin: 20px auto; 
+    }
+
   
 }
+  
   
