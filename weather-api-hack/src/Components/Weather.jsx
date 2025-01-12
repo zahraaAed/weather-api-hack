@@ -1,4 +1,4 @@
-import React ,{useState}from 'react';
+import React ,{useEffect, useState}from 'react';
 import sunCloudImage from '../assets/Sun cloud angled rain.png';
 import rainImage from '../assets/noun-rain-2438520 1.png';
 import humidityImage from '../assets/noun-humidity-151847 1.png';
@@ -8,9 +8,44 @@ import './Weather.css';
 
 
 const Weather=()=>{
-  const [weatherData, setweatherData]=useState("")
-const [cityName, setcityName]=useState("")
+  const [weatherData, setWeatherData]=useState(false);
+const [cityName, setcityName]=useState("");
+const allIcons={
+  "01d":sunCloudImage,
+  "01n":sunCloudImage,
+}
 
+const search =async(cityName)=>{
+
+  try{
+    const apiKey = import.meta.env.VITE_APP_KEY;  // Get the API key from the .env file
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${apiKey}`;
+    
+    
+console.log("API Key:", apiKey);
+
+
+const response=await fetch (url);
+const data=await response.json();
+console.log(data);
+const icon=allIcons[data.weather[0].icon] || sunCloudImage;
+setWeatherData({
+  humidity:data.main.humidity,
+  windspeed:data.wind.speed,
+  temperature:Math.floor(data.main.temp),
+  location:data.name,
+  icon:icon
+
+})
+  }
+  catch{
+
+  }
+}
+
+useEffect(()=>{
+  search("Lebanon");
+},[])
   return (
     <div className="app">
       <header className="header">
@@ -43,25 +78,25 @@ const [cityName, setcityName]=useState("")
            
             <img src={sunCloudImage} alt="weather icon" />
           </div>
-          <div className="temperature">28°</div>
+          <div className="temperature">{weatherData.temperature}°</div>
           <div className="details">
             <p>Precipitations</p>
-            <p>Max.: 31° Min.: 26°</p>
+            <p>Max.: 19° Min.: 14°</p>
           </div>
         </div>
         <div className="big-stats">
           <div className="stats">
             <div className="stat">
               <img src={rainImage} alt="rain" />
-              <p>6%</p>
+              <p>35%</p>
             </div>
             <div className="stat">
               <img src={humidityImage} alt="humidity" />
-              <p>90%</p>
+              <p>60%</p>
             </div>
             <div className="stat">
               <img src={windImage} alt="wind" />
-              <p>19 km/h</p>
+              <p>8 km/h</p>
             </div>
           </div>
         </div>

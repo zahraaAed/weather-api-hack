@@ -87,7 +87,7 @@ align-items: center;
   
 .weather-icon img {
     width: 200px;
-    height: 200px;
+    height: 250px;
 }
   
 .temperature {
@@ -140,3 +140,12 @@ align-items: center;
     margin: 5px;
     text-align: center;
 }
+/* Media Query for screens less than 560px */
+@media (max-width: 560px) {
+    .header {
+      flex-direction: column; 
+      text-align: center; 
+    }
+  
+}
+  
