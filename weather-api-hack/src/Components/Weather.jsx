@@ -4,7 +4,6 @@ import rainImage from '../assets/noun-rain-2438520 1.png';
 import humidityImage from '../assets/noun-humidity-151847 1.png';
 import windImage from '../assets/noun-wind-4507827 1.png';
 import hourlyImage from '../assets/Group 650.png';
-import searchBar from '../assets/icon _Search.png';
 import './Weather.css';
 
 
@@ -41,7 +40,7 @@ const [cityName, setcityName]=useState("")
       <div className="current-weather">
         <div className="icon-section">
           <div className="weather-icon">
-            {/* I changed this to button */}
+           
             <img src={sunCloudImage} alt="weather icon" />
           </div>
           <div className="temperature">28°</div>
