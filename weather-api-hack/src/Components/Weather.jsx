@@ -24,32 +24,34 @@ const Weather = () => {
     icon: sunCloudImage,
     temperature_max: 0,
     temperature_min: 0,
+    hourlyForecast: [],
   });
 
   const allIcons = {
     "01d": sunImage,
     "01n": sunImage,
-    "02d":fewCloudImage,
-    "02n":fewCloudImage,
-    "03d":cloudImage,
-    "03n":cloudImage,
-    "04d":brokenCloudImage,
-    "04n":brokenCloudImage,
-    "09d":sunCloudImage,
-    "09n":sunCloudImage,
-    "10d":rainyImage,
-    "10n":rainyImage,
-    "11d":thunderstormImage,
-    "11n":thunderstormImage,
-    "13d":snowyImage,
-    "13n":snowyImage,
-    "50d":mistImage,
-    "50n":mistImage
+    "02d": fewCloudImage,
+    "02n": fewCloudImage,
+    "03d": cloudImage,
+    "03n": cloudImage,
+    "04d": brokenCloudImage,
+    "04n": brokenCloudImage,
+    "09d": sunCloudImage,
+    "09n": sunCloudImage,
+    "10d": rainyImage,
+    "10n": rainyImage,
+    "11d": thunderstormImage,
+    "11n": thunderstormImage,
+    "13d": snowyImage,
+    "13n": snowyImage,
+    "50d": mistImage,
+    "50n": mistImage
   };
+
+  let apiKey = import.meta.env.VITE_APP_KEY; // Get the API key from the .env file
 
   const search = async (cityName) => {
     try {
-      const apiKey = import.meta.env.VITE_APP_KEY; // Get the API key from the .env file
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${apiKey}`;
 
       console.log("API Key:", apiKey);
@@ -71,12 +73,69 @@ const Weather = () => {
         icon: icon,
         temperature_max: Math.floor(data.main.temp_max),
         temperature_min: Math.floor(data.main.temp_min),
+        hourlyForecast: [], // Reset hourly forecast
       });
+
+      const lat = data.coord.lat;
+      const lon = data.coord.lon;
+      hourlySearch(lat, lon);
+      
     } catch (error) {
       console.error("Error fetching weather data:", error);
+      setWeatherData(prevState => ({
+        ...prevState,
+        location: "Error: Unable to fetch weather data",
+        temperature: "",
+        humidity: "",
+        windspeed: "",
+        temperature_max: "",
+        temperature_min: "",
+        hourlyForecast: []
+      }));
     }
   };
 
+  const hourlySearch = (lat, lon) => {
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+
+  
+    console.log("api",apiKey)
+    
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Hourly Data:", data);
+        
+        if (data.list && data.list.length > 0) {
+          setWeatherData(prevData => ({
+            ...prevData,
+            hourlyForecast: data.list.map(item => ({
+              temperature: Math.floor(item.main.temp),
+              time: new Date(item.dt * 1000).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              icon: allIcons[item.weather[0].icon] || hourlyImage,
+            })).slice(0, 6), // Limit to first 6 hours
+          }));
+        } else {
+          console.warn("No hourly forecast data available.");
+          setWeatherData(prevData => ({
+            ...prevData,
+            hourlyForecast: []
+          }));
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching hourly weather data:", error);
+        setWeatherData(prevData => ({
+          ...prevData,
+          hourlyForecast: []
+        }));
+      });
+  };
+  
   useEffect(() => {
     search("Lebanon");
   }, []);
@@ -90,8 +149,8 @@ const Weather = () => {
           <button
             className="search-icon"
             onClick={() => {
-              search(inputRef.current.value);  //retrieves the current text entered in the input field 
-              inputRef.current.value = ''; // Clear input
+              search(inputRef.current.value);  
+              inputRef.current.value = ''; 
             }}
           >
             <svg
@@ -130,57 +189,37 @@ const Weather = () => {
           <div className="stats">
             <div className="stat">
               <img src={rainImage} alt="rain" />
-              <p>{weatherData.temperature}%</p>
-            </div>
-            <div className="stat">
-              <img src={humidityImage} alt="humidity" />
               <p>{weatherData.humidity}%</p>
             </div>
             <div className="stat">
-              <img src={windImage} alt="wind" />
+              <img src={humidityImage} alt="humidity" />
               <p>{weatherData.windspeed} km/h</p>
+            </div>
+            <div className="stat">
+              <img src={windImage} alt="wind" />
+              <p>{weatherData.temperature}%</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="hourly-weather">
-        <h3>Today</h3>
+        <h3>Hourly Forecast</h3>
         <div className="hourly-cards">
-        <div className="hour-card">
-            <p>29°C</p>
-            <img src={hourlyImage} alt="hourly weather" />
-            <p>15:00</p>
-          </div>
-          <div className="hour-card">
-            <p>29°C</p>
-            <img src={hourlyImage} alt="hourly weather" />
-            <p>16:00</p>
-          </div>
-          <div className="hour-card">
-            <p>29°C</p>
-            <img src={hourlyImage} alt="hourly weather" />
-            <p>17:00</p>
-          </div>
-          <div className="hour-card">
-            <p>29°C</p>
-            <img src={hourlyImage} alt="hourly weather" />
-            <p>18:00</p>
-          </div>
-          <div className="hour-card">
-            <p>29°C</p>
-            <img src={hourlyImage} alt="hourly weather" />
-            <p>19:00</p>
-          </div>
-          <div className="hour-card">
-            <p>29°C</p>
-            <img src={hourlyImage} alt="hourly weather" />
-            <p>20:00</p>
-          </div>
+          {Array.isArray(weatherData.hourlyForecast) && weatherData.hourlyForecast.length > 0 ? (
+            weatherData.hourlyForecast.map((hour, index) => (
+              <div className="hour-card" key={index}>
+                <p>{Math.round(hour.temperature)}°</p>
+                <img src={hour.icon} alt="hourly weather" className="hour-icon" /> 
+                <p>{hour.time}</p>
+              </div>
+            ))
+          ) : (
+            <p>No hourly forecast data available.</p>
+          )}
         </div>
       </div>
-        </div>
-   
+    </div>
   );
 };
 
