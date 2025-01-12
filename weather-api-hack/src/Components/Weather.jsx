@@ -4,6 +4,14 @@ import rainImage from '../assets/noun-rain-2438520 1.png';
 import humidityImage from '../assets/noun-humidity-151847 1.png';
 import windImage from '../assets/noun-wind-4507827 1.png';
 import hourlyImage from '../assets/Group 650.png';
+import sunImage from "../assets/sun.png";
+import rainyImage from "../assets/rainy.png";
+import thunderstormImage from "../assets/thunderstorm.png";
+import snowyImage from "../assets/snowy.png";
+import mistImage from "../assets/mist.png";
+import brokenCloudImage from "../assets/broken-clouds.png";
+import cloudImage from "../assets/cloud.png";
+import fewCloudImage from "../assets/few-clouds.png";
 import './Weather.css';
 
 const Weather = () => {
@@ -19,8 +27,24 @@ const Weather = () => {
   });
 
   const allIcons = {
-    "01d": sunCloudImage,
-    "01n": sunCloudImage,
+    "01d": sunImage,
+    "01n": sunImage,
+    "02d":fewCloudImage,
+    "02n":fewCloudImage,
+    "03d":cloudImage,
+    "03n":cloudImage,
+    "04d":brokenCloudImage,
+    "04n":brokenCloudImage,
+    "09d":sunCloudImage,
+    "09n":sunCloudImage,
+    "10d":rainyImage,
+    "10n":rainyImage,
+    "11d":thunderstormImage,
+    "11n":thunderstormImage,
+    "13d":snowyImage,
+    "13n":snowyImage,
+    "50d":mistImage,
+    "50n":mistImage
   };
 
   const search = async (cityName) => {
